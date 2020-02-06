@@ -1,0 +1,384 @@
+* WTD
+
+  WTD or "Writing Things Down" is a journal-based personal
+  organization system for offline and online use.  Unlike other
+  systems such as Paul Allen's GTD and Ryder Carroll's bullet
+  journaling, its goal is not merely to stay ontop of an endless
+  incoming list of tasks, but to achieve greater agency over personal
+  attentional resources.  Further, while it is mainly a solitary
+  system at present, it is designed to boost cooperative intelligence.
+
+** Philosophy
+
+   Personal organization matters.  Not just for efficient task
+   management and prioritization (though that is important and
+   valuable in its own right) but to exercise more intentionally the
+   uniquely human capacity for self-authorship, both at a personal
+   level and at a social, cooperative level.
+
+   Writing (in a general sense of "graphical technology" including
+   diagramming, mathematical notation, software code, etc) is a tool
+   for thinking, that permeates and defines the modern human niche. As
+   Alva Noe explores in his book "Strange Tools", the arts and
+   philosophy are "bent on the invention of writing", which is to say
+   that writing is a means by which we engage in a second-order
+   activity of reorganizing our first-order activities.
+
+   All graphical practices have their own charactistic merits as tools
+   of thought, and at root this is because ecologically situated
+   embodied human cognition is externally scaffolded by the use of
+   tools that enable us to coordinate attention socially.
+
+   WTD is designed within the framework of the Senters project, which
+   seeks to develop a graphical practice at the basic intersection of
+   machine-learnable behaviors and human joint attentional scaffolding
+   to make computing, and human cooperative communication in general,
+   more expressively powerful.  Further details can be found at
+   https://github.com/senters/senters/blob/master/centers-of-attention.org.
+
+   The longer term roadmap of WTD is to implement it as a personal
+   attention scaffolding system (PASS) as defined in the document
+   linked above, though presently it is practicable as a manual
+   process.
+
+** Core Principles
+
+   The following are core principles of both WTD and the senters
+   project broadly:
+
+     * Self-authorship
+
+       Writing our own attentional scaffolding is a vehicle of
+       self-reorganization.
+
+     * Collaborative Sensemaking
+
+       Writing our own attentional scaffolding facilitates points of
+       common ground in networks of authors sharing use of the same
+       scaffolding.
+
+     * Intelligence Amplification
+
+       Writing our own attentional scaffolding empowers individuals,
+       and networks of individuals establishing common ground through
+       use of scaffolding, to wield cognitive capacities that would
+       not be possible without these tools.
+
+** The Senters Computation Model
+
+   Senters is an agent-centric computation model, meaning software
+   agents-- not fixed programs-- make decisions on what to do.  In
+   traditional programming systems, a program is a deterministically
+   executed set of instructions.  Senters does not replace that, but
+   adds a layer of organization above it.  This layer, the scaffolding
+   layer, does not determine the actions of agents but offers agents
+   possibilities for action.  Cooperative communication among agents
+   requires coordinating on what scaffolding to be guided by.
+   Scaffolding is both selected, composed, and followed in contexts of
+   situated use.
+
+   To be more specific, Senters has an event-driven architecture with
+   three layers:
+
+     1. messy real-world stuff happening
+     2. instruments (traditional programs) that bidirectionally bridge
+        environmental events with discrete events on one hand, and
+        discrete actions to effects upon the environent on the other
+     3. scaffolding by specifying centers of attention, which are
+        evolving feedback-oriented systems, instrumenting context.
+
+   To elaborate on centers of attention being feedback-oriented
+   systems, there are two sides to this: a human attention model and a
+   computing model.
+
+     * Human attention: ecological psychology suggests a task-centric
+       ontology of prospective control involving conditions of task
+       opportunity, subtasks in support of them, and realization of
+       task objectives.  When we talk about attention we are really
+       referring to an author engaging in a task of control toward
+       realizing an outcome.  Further, work done by Tomasello, Nagell,
+       and Capenter has found three distinct skills of joint
+       attention: sharing, following into, and directing the shared
+       task at hand.  What this suggests is that a center of attention
+       can be specified in terms of entry conditions, supporting
+       conditions, and exit conditions.
+
+     * Computing: the attentional model above directly inspires a
+       computing model.  A center of attention is constituted as a
+       collection of couplings between instrumented events and the
+       three phases of task attention:
+
+         - events bearing upon entry into the center
+         - events bearing upon attending to other tasks in support of
+           realizing it
+         - events bearing upon exit from it
+
+       An agent might evaluates a center differently depending on its
+       stage of progressing through a loop of involvement in this
+       center (and its various motivating objectives, which may be
+       expressed as scaffolded involvement in other centers of
+       attention.)
+
+       1. *When not presently involved in this center*: agent either
+          recommends engaging or not, given the events instrumenting
+          viable entry, and the history of exit from this center to
+          other centers, given whatever preferences the agent may have
+          for further outcomes that might follow from this center,
+          ideally following the intentions of its author.
+       2. *When presently carrying out the practice of this center*:
+          agent either recommends engaging supporting centers or not,
+          based on their presently produced events and the history of
+          their being assigned credit for the present center's
+          realization.
+       3. *When evaluating continued attention to this center*: agent
+          either recommends exit or continue, given the events
+          instrumenting exit. Events instrumenting exit for this
+          center often instrument entry for other centers that can be
+          exited to.
+
+       An author (as distinct from a software agent) goes through a
+       similar process, with the help of agents.  Authors identify and
+       name centers for reference prior to gesturing events
+       instrumenting them.  They then perform gestures that associate
+       instrumented events as motivating attentional decisions for
+       each of the loop phases:
+
+       1. *When not presently involved in this center*: author either
+          gestures instrumented events and gestures as motivating
+          engagement or not, given the recommendations of its agents,
+          or of other authors, as motivated by likely outcomes, and
+          overall judgement of the author.
+       2. *When presently carrying out the practice of this center*:
+          author either gestures instrumented events and gestures as
+          motivating engaging supporting centers or not, given the
+          recommendations of its agents, or of other authors, as
+          motivated by likely outcomes, and overall judgement of the
+          author.
+       3. *When evaluating continued attention to this center*: author
+          either gestures gestures instrumented events and gestures as
+          motivating exit or continue, given the recommendations of
+          its agents, or of other authors, as motivated by likely
+          outcomes, and overall judgement of the author.
+
+       A history of gestural events motivating attentional decisions
+       w/rt centers wholly defines centers as information for
+       scaffolding attention (centers are "event-sourced" from
+       gestures).
+
+   This scheme of attention-based scaffolding might appear complex but
+   it should be simple in practice.  Authors identify initially
+   amorphous centers of attention and elaborate them over time with
+   gestures indicating which instrumented events motivate engagement,
+   support, and realization/exit.  Both socially and personally this
+   is process of working out what scaffolding of attention works best.
+   Agents in turn follow the information provided by authors through
+   gesture and pursue adaptive strategies on their own, reporting
+   their findings as recommendations.
+
+** WTD's Use of Senters
+
+   One caveat to be made about Senters as a broader project versus its
+   use in the WTD system, is that Senters is designed to become a
+   system integrated into immersive interaction in a fine-grained way.
+   Presently it is not yet developed to that extent.  In WTD, Senters
+   is generally likely to be more coarse-grained in its application at
+   its present stage.  Eventually it should start to approach its
+   aspirations of being a seamless bicycle for the mind or "ecology of
+   bike paths for embodied minds".
+
+   Another caveat to make is that Senters is designed with joint
+   attention and intelligence augmentation through building on a
+   broader pool of socially shared scaffolding.  At its present stage
+   WTD is much more solitary.  However as Senters becomes more
+   well-developed, if successful it can benefit from a larger pool of
+   authors interfacing through the gestures that they intentionally
+   share with one anouther.
+
+** Setup & Getting Started
+
+   The system should ideally be available to use at all times.  It
+   will be assumed that a digital system is used (the example
+   presently assumes emacs & org-mode).  These instructions can also
+   be read substituting digital files for paper pages.  References to
+   scripted or automatic processes can be substituted with manual
+   equivalents.  However, later evolutions of WTD are likely to move
+   farther away from compatibility with a fully manual and paper-based
+   approach.
+
+   1. Create a journal file that collects append-only timestamped
+      transactions.  There should be only one journal file. In
+      Senters, transactions can have a recipient or default to one's
+      own identity.  In WTD, for the time being, transactions will
+      likey be with oneself, but nothing stops anyone from trying out
+      the system socially, for example in a group working on a
+      project, even today.  Suggested practices for social use can be
+      elaborated here as more data becomes available from experience.
+
+      See "Anatomy of a Transaction" below for more details on the
+      operation that can be performed in a transaction.
+
+   2. Create an instrument file.  This can be a manual instrument or a
+      scripted one.  Instruments interact with external systems, so
+      they might for example read from a file that is collecting
+      logged data.  See the section on instruments below for more
+      details on instruments. In the example in this repository, the
+      weight-loss instrument includes a food log and a weight log.
+
+   3. Create an instrument log for the events produced by instruments
+      automatically.  Instruments as invoked by authors directly
+      should be logged in the journal.  This reduces noise in the
+      journal and maintains a clean separation of concerns between
+      authorial events (scaffolding) and mechanical events
+      (instrumenting).
+
+   4. Create an index file that collects references to transactions in
+      the journal.  There can be multiple index files, for example an
+      index file for routines, an index file for how-tos, and an index
+      file for projects. Indexes are labeled and ranked with the most
+      pertinent at the top.  An index entry can simply label a
+      reference to transactions in the journal, or tell a story
+      connecting journal references.  Some kinds of indexes might be
+      automaticaly generable based on transactions in the journal, but
+      others are necessarily expressions of authorial intent
+      eg. selecting which of many past attentional processes are the
+      ones meant as presently relevant.
+
+   5. In the instrument log add events of instruments (or have them
+      automatically added).  In the journal declare centers and add
+      gestures to centers.  Use the index to prioritize, sequence, and
+      make plans or to-do lists with links to transactions in the
+      journal.  While it has not been duly proven out as of the time
+      of this writing, it seems that organizing in this way should not
+      only be a good fit for the nature of attention, but should
+      provide a machine-followable structure of attention that can
+      underpin software agents that make appropriate intention-aware
+      discoveries and recommendations.
+
+** Authors, Centers, and Loops
+
+   People who use this system are refered to as *authors*.  In WTD,
+   and in Senters broadly, it is recommended to create many authorial
+   identities or "alts" as they are sometimes called.  For example I
+   have at least one personal WTD identity, and one WTD identity for
+   each professional engagement I've had since starting some early
+   version of this system.  The example setup in this repository is
+   for a single identity.  Multiple identites are just two such setups
+   side by side.
+
+   A *center* (of attention) is anything that attention can be given
+   to-- in other words anything that an author can be involved in,
+   over some period of time however long or short in duration.
+
+   A *loop* (a closely related idea for reference is Boyd's OODA loop)
+   tracks the status of an author or agent's involvement in a center
+   of attention.  There are three phases of active involvement tracked
+   by a loop:
+
+   1. potential to engage
+   2. active involvement
+   2. evaluation of further involvement
+
+** Anatomy of a Transaction
+
+   Transactions are collections of one or more operations.
+   Transactions should be viewed as atomic, because they can be
+   referred to only as a whole and not as parts. If the operations
+   could conceivably need to be referred to individually they should
+   be separate transactions.  The term "transaction" is loosely
+   inspired by Dewey & Bentley's use of the term in "Knowing and the
+   Known" as well as its use in computer science.  The following are
+   type of operations that transactions can include:
+
+   * note: can be anything, a random vague idea, a nonsensical phrase,
+     etc. A transaction with no gestures, just comments, is by default
+     a note.
+
+   * alias: give a new name for reference, to an existing transaction
+     in the journal.
+
+   * instrument-event: an instrument triggering either in response
+     to some event, or by action of the author.
+
+   * center: a center as indicated by this operation is not much more
+     than a note, except that it indicates an intention to gesture in
+     reference to it.
+
+   * replace: indicate that a new version of a center is intended to
+     substitute for the previous collected experience of a center, for
+     example as a cleaner redo based on what was learned over time.
+
+   * any gesture, of one of the following kinds:
+
+*** Gestures
+
+    * engage: instrument an event or gesture as motivating entry
+      - refrain: same but opposite
+
+    * include: instrument an event or gesture as motivating inclusion
+      because it supports the present center's focus
+      - exclude: same but opposite
+
+    * realize: instrument an event or gesture as motivating exit
+      - continue: same but opposite
+
+*** Gesture-auxiliary
+
+    * forget: forget a previously suggested gesture, either of one's
+      own or someone else's.  This does not remove history but
+      recognizes it as being forgotten in terms of interest or
+      utilitity at the time it is transacted. Sometimes helpfully in
+      transaction with an alternative gesture.
+
+    * accept: accept a gesture given by another author or by an agent.
+      It serves to document credit for bring it to attention.  In
+      transaction it can relate a gesture as elaborating another
+      gesture.
+
+** Instruments
+
+   Instruments signal a bit of information as a go/no-go outcome.
+   Instruments can have arguments at the time of definition, but these
+   arguments are baked in for all invocation thereafter making them
+   singly invokable tools with single positive outcomes. An instrument
+   can have an effect as well but it should serve the instrument's
+   singular function.
+
+** Best Practices
+
+   * Indexes succinctly tie together transactions in the journal. More
+     verbose notes can go in the transactions themselves.
+
+   * Where to put things:
+
+     1. External system events are wherever they live, or in log files
+        asscociated with instruments in their directories.
+
+     2. Rules for turning external events into instrumented events
+        live in instruments.
+
+     3. Events produced by instruments go in the instrument log.
+
+     4. Transactions including notes, gestures, and other operations
+        go in the journal.
+
+     5. Narratives, lists, etc weaving together journal activity go in
+        index files.
+
+** FAQ
+
+   + Why do all this work to organize one's activity?
+
+     - to prototype use of senters protocol (which is itself a work in
+       progress)
+
+     - to motivate automation of manual tasks by feeling the burden of
+       doing things manually
+
+   + Is WTD ready for use by someone encountering the current
+     docuementation and supporting tools?
+
+     To be honest, probably not yet, as it's flux and I'm still
+     feeling out what are the best ways of doing/expressing things.
+     It will become increasingly accessible as the level of "cognitive
+     automation" increases with more of the methodology being baked
+     into the supporting framework.

@@ -1,0 +1,16 @@
+* Example of WTD in Practice
+
+  Pretend that a person has created this "example" directory as an
+  author identity for personal use of WTD.  This person is very skinny
+  and wants to gain weight. This is for health reasons.
+
+  First, let's create a center for "maintaining good health"
+
+   Weight is added in weight log
+
+   Weight increase instrument registers weight increase
+
+   Weight decrease instrument too
+
+   Weight loss center has exit condition of instrument indicating goal
+   weight. Weight loss center has entry condition of
