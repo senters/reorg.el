@@ -382,3 +382,16 @@
      It will become increasingly accessible as the level of "cognitive
      automation" increases with more of the methodology being baked
      into the supporting framework.
+
+** Development Roadmap
+
+   1. the first phase of development is the manual use of the system
+      in emacs
+
+   2. the next phase of development is the integration of emacs code
+      supporting these practices, with the main backend server and
+      instances of instrument servers for particular.
+
+   3. a phase of development beyond that is to implement the system as
+      an app that qualifies as a real immersive senters PASS (personal
+      attentional scaffolding system).

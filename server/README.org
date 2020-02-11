@@ -19,19 +19,57 @@
    the index. We will incorporate http requests to the wtd server into
    the emacs client code as well.
 
-   Probably the most obvious piece to implement is instruments.  For
-   now it makes sense to simply define the instruments in the server
-   code, though later a more modular design for adding instruments to
-   the server for specific WTD setups could make sense.  For now, for
-   simplicity's sake we will implement a pull-only model for
-   instruments.  It remains to be seen whether a push approach will be
-   useful, but if so it could be done via integration with redis
-   streams on the server side, and websocket connection from emacs to
-   the server.
+   Probably the most obvious piece to implement is instruments.
+   Instruments will be built as independent services (one service for
+   each identity) using a standard framework that will live in this
+   repo, to ensure that instruments conform to a standard
+   specification of instrument events.  The actual instrument code
+   will be implemented as libraries that can be pulled in as
+   dependencies into particular instrument servers.  Because of the
+   standardized nature of instruments, there can also potentially be
+   templated programmmatic insertion of instrument library dependency
+   and API routes in the instrument servers.
+
+   One of the tensions to address in this architecture is between the
+   utility of having data stored in org-mode files, versus stored in
+   some sort of database or medium-scale log for stream processing
+   purposes.  The answer right now is to to punt on this until WTD
+   implemented as a senters PASS.  For now WTD can be conducted in an
+   "edit and compile" style model.  Make changes to files, and then
+   execute a script.  The script processes transactions that have not
+   yet been read, recording the last transaction read, and updating an
+   event-sourced data structure of transactions.
+
+   It will be necessary/useful to implment functionality to allow WTD
+   author identities to be easily switched between, and new identities
+   created, by RPC calls to the server.  The server creates initial
+   files in the directory structure, and the emacs-side calls to it
+   also opens the file in a buffer. Alternatively we can even on the
+   emacs side make the journal have the appearance of being an org
+   file (as a side note, really we're mainly using outline-mode
+   features) when in fact it is produced from.  However it is nice to
+   be able have the data be in git version control.  These questions
+   will need to be explored and considered going forward.
+
+   So far, the initial RPC API will consist of a command to initiate a
+   project/identity, a command to switch between identities, and a
+   command to process new transactions.
+
+   Index files should continue to be manually editable in emacs.
 
 ** Usage
 
-   TODO
+   1. Start a server
+
+   ```
+   lein ring server
+   ```
+
+   2. Launch emacs with `wtd.el` loaded.
+
+   3. Use wtd-* commands in emacs that involve making requests to this
+      server.  See main README for instructions on editing files and
+      using emacs wtd commands.
 
 ** License
 
