@@ -7,7 +7,7 @@
 
 (defun wtd-insert-timestamp ()
   (interactive)
-  (insert (wtd-timestamp)))
+  (insert (concat (wtd-timestamp) ", ")))
 
 (defun wtd-identifier ()
   (concat "<<" (eshell-user-name) "-" (wtd-timestamp) ">>"))

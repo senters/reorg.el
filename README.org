@@ -1,12 +1,12 @@
 * WTD
 
   WTD or "Writing Things Down" is a journal-based personal
-  organization system for offline and online use.  Unlike other
-  systems such as Paul Allen's GTD and Ryder Carroll's bullet
-  journaling, its goal is not merely to stay ontop of an endless
-  incoming list of tasks, but to achieve greater agency over personal
-  attentional resources.  Further, while it is mainly a solitary
-  system at present, it is designed to boost cooperative intelligence.
+  organization system.  Unlike other systems such as Paul Allen's GTD
+  and Ryder Carroll's bullet journaling, its goal is not merely to
+  stay ontop of an endless incoming list of tasks, but to achieve
+  greater agency over personal attentional resources.  Further, while
+  it is mainly a solitary system at present, it is designed to boost
+  cooperative intelligence.
 
 ** Philosophy
 
@@ -27,14 +27,13 @@
    All graphical practices have their own charactistic merits as tools
    of thought, and at root this is because ecologically situated
    embodied human cognition is externally scaffolded by the use of
-   tools that enable us to coordinate attention socially.
-
-   WTD is designed within the framework of the Senters project, which
-   seeks to develop a graphical practice at the basic intersection of
+   tools that enable us to coordinate attention socially.  WTD is
+   designed within the framework of the Senters project, which seeks
+   to develop a graphical practice at the basic intersection of
    machine-learnable behaviors and human joint attentional scaffolding
    to make computing, and human cooperative communication in general,
    more expressively powerful.  Further details can be found at
-   https://github.com/senters/senters/blob/master/centers-of-attention.org.
+   https://github.com/senters/senters.
 
    The longer term roadmap of WTD is to implement it as a personal
    attention scaffolding system (PASS) as defined in the document
@@ -43,7 +42,7 @@
 
 ** Core Principles
 
-   The following are core principles of both WTD and the senters
+   The following are core principles of both WTD and the Senters
    project broadly:
 
      * Self-authorship
@@ -64,118 +63,10 @@
        use of scaffolding, to wield cognitive capacities that would
        not be possible without these tools.
 
-** The Senters Computation Model
-
-   Senters is an agent-centric computation model, meaning software
-   agents-- not fixed programs-- make decisions on what to do.  In
-   traditional programming systems, a program is a deterministically
-   executed set of instructions.  Senters does not replace that, but
-   adds a layer of organization above it.  This layer, the scaffolding
-   layer, does not determine the actions of agents but offers agents
-   possibilities for action.  Cooperative communication among agents
-   requires coordinating on what scaffolding to be guided by.
-   Scaffolding is both selected, composed, and followed in contexts of
-   situated use.
-
-   To be more specific, Senters has an event-driven architecture with
-   three layers:
-
-     1. messy real-world stuff happening
-     2. instruments (traditional programs) that bidirectionally bridge
-        environmental events with discrete events on one hand, and
-        discrete actions to effects upon the environent on the other
-     3. scaffolding by specifying centers of attention, which are
-        evolving feedback-oriented systems, instrumenting context.
-
-   To elaborate on centers of attention being feedback-oriented
-   systems, there are two sides to this: a human attention model and a
-   computing model.
-
-     * Human attention: ecological psychology suggests a task-centric
-       ontology of prospective control involving conditions of task
-       opportunity, subtasks in support of them, and realization of
-       task objectives.  When we talk about attention we are really
-       referring to an author engaging in a task of control toward
-       realizing an outcome.  Further, work done by Tomasello, Nagell,
-       and Capenter has found three distinct skills of joint
-       attention: sharing, following into, and directing the shared
-       task at hand.  What this suggests is that a center of attention
-       can be specified in terms of entry conditions, supporting
-       conditions, and exit conditions.
-
-     * Computing: the attentional model above directly inspires a
-       computing model.  A center of attention is constituted as a
-       collection of couplings between instrumented events and the
-       three phases of task attention:
-
-         - events bearing upon entry into the center
-         - events bearing upon attending to other tasks in support of
-           realizing it
-         - events bearing upon exit from it
-
-       An agent might evaluates a center differently depending on its
-       stage of progressing through a loop of involvement in this
-       center (and its various motivating objectives, which may be
-       expressed as scaffolded involvement in other centers of
-       attention.)
-
-       1. *When not presently involved in this center*: agent either
-          recommends engaging or not, given the events instrumenting
-          viable entry, and the history of exit from this center to
-          other centers, given whatever preferences the agent may have
-          for further outcomes that might follow from this center,
-          ideally following the intentions of its author.
-       2. *When presently carrying out the practice of this center*:
-          agent either recommends engaging supporting centers or not,
-          based on their presently produced events and the history of
-          their being assigned credit for the present center's
-          realization.
-       3. *When evaluating continued attention to this center*: agent
-          either recommends exit or continue, given the events
-          instrumenting exit. Events instrumenting exit for this
-          center often instrument entry for other centers that can be
-          exited to.
-
-       An author (as distinct from a software agent) goes through a
-       similar process, with the help of agents.  Authors identify and
-       name centers for reference prior to gesturing events
-       instrumenting them.  They then perform gestures that associate
-       instrumented events as motivating attentional decisions for
-       each of the loop phases:
-
-       1. *When not presently involved in this center*: author either
-          gestures instrumented events and gestures as motivating
-          engagement or not, given the recommendations of its agents,
-          or of other authors, as motivated by likely outcomes, and
-          overall judgement of the author.
-       2. *When presently carrying out the practice of this center*:
-          author either gestures instrumented events and gestures as
-          motivating engaging supporting centers or not, given the
-          recommendations of its agents, or of other authors, as
-          motivated by likely outcomes, and overall judgement of the
-          author.
-       3. *When evaluating continued attention to this center*: author
-          either gestures gestures instrumented events and gestures as
-          motivating exit or continue, given the recommendations of
-          its agents, or of other authors, as motivated by likely
-          outcomes, and overall judgement of the author.
-
-       A history of gestural events motivating attentional decisions
-       w/rt centers wholly defines centers as information for
-       scaffolding attention (centers are "event-sourced" from
-       gestures).
-
-   This scheme of attention-based scaffolding might appear complex but
-   it should be simple in practice.  Authors identify initially
-   amorphous centers of attention and elaborate them over time with
-   gestures indicating which instrumented events motivate engagement,
-   support, and realization/exit.  Both socially and personally this
-   is process of working out what scaffolding of attention works best.
-   Agents in turn follow the information provided by authors through
-   gesture and pursue adaptive strategies on their own, reporting
-   their findings as recommendations.
-
 ** WTD's Use of Senters
+
+   A full description of Senters can be found at
+   https://github.com/senters/senters/blob/master/senters-technical-spec.org.
 
    One caveat to be made about Senters as a broader project versus its
    use in the WTD system, is that Senters is designed to become a
@@ -251,7 +142,7 @@
       of this writing, it seems that organizing in this way should not
       only be a good fit for the nature of attention, but should
       provide a machine-followable structure of attention that can
-      underpin software agents that make appropriate intention-aware
+      underpin attendants that make appropriate intention-aware
       discoveries and recommendations.
 
 ** Authors, Centers, and Loops
@@ -270,7 +161,7 @@
    over some period of time however long or short in duration.
 
    A *loop* (a closely related idea for reference is Boyd's OODA loop)
-   tracks the status of an author or agent's involvement in a center
+   tracks the status of an author or attendant's involvement in a center
    of attention.  There are three phases of active involvement tracked
    by a loop:
 
@@ -296,8 +187,9 @@
    * alias: give a new name for reference, to an existing transaction
      in the journal.
 
-   * instrument-event: an instrument triggering either in response
-     to some event, or by action of the author.
+   * instrument-event: an instrument triggering by action of the
+     author, whether as automated or continuous stream-based check, or
+     manually.
 
    * center: a center as indicated by this operation is not much more
      than a note, except that it indicates an intention to gesture in
@@ -314,9 +206,9 @@
     * engage: instrument an event or gesture as motivating entry
       - refrain: same but opposite
 
-    * include: instrument an event or gesture as motivating inclusion
+    * support: instrument an event or gesture as motivating inclusion
       because it supports the present center's focus
-      - exclude: same but opposite
+      - hinder: same but opposite
 
     * realize: instrument an event or gesture as motivating exit
       - continue: same but opposite
@@ -329,19 +221,19 @@
       utilitity at the time it is transacted. Sometimes helpfully in
       transaction with an alternative gesture.
 
-    * accept: accept a gesture given by another author or by an agent.
-      It serves to document credit for bring it to attention.  In
-      transaction it can relate a gesture as elaborating another
-      gesture.
+    * accept: accept a gesture given by another author or by an
+      attendant.  It serves to document credit for bring it to
+      attention.  In transaction it can relate a gesture as
+      elaborating another gesture.
 
 ** Instruments
 
-   Instruments signal a bit of information as a go/no-go outcome.
-   Instruments can have arguments at the time of definition, but these
-   arguments are baked in for all invocation thereafter making them
-   singly invokable tools with single positive outcomes. An instrument
-   can have an effect as well but it should serve the instrument's
-   singular function.
+   Instruments signal a bit of information as a go/no-go outcome, in
+   other words a threshold function on some aspect of the world that
+   they "instrument". Instruments can have arguments at the time of
+   definition, but these arguments are baked in for all invocation
+   thereafter making them singly invokable tools with single positive
+   outcomes.
 
 ** Best Practices
 
@@ -368,11 +260,12 @@
 
    + Why do all this work to organize one's activity?
 
-     - to prototype use of senters protocol (which is itself a work in
+     - to prototype use of Senters protocol (which is itself a work in
        progress)
 
      - to motivate automation of manual tasks by feeling the burden of
-       doing things manually
+       doing things manually.  This work has started in
+       https://github.com/senters/wtd/tree/master/server of this repo.
 
    + Is WTD ready for use by someone encountering the current
      docuementation and supporting tools?
@@ -393,5 +286,5 @@
       instances of instrument servers for particular.
 
    3. a phase of development beyond that is to implement the system as
-      an app that qualifies as a real immersive senters PASS (personal
+      an app that qualifies as a real immersive Senters PASS (personal
       attentional scaffolding system).
