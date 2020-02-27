@@ -25,16 +25,14 @@
    which provide the instrument and action events based on what they
    do.
 
-   Opaque augmenters are to be defined fully in normal protocol
+   Transparent augmenters are to be defined fully in normal protocol
    transactions, and their instruments are driven entirely by actions
    visible in the transaction log. Opaque augmenters will be built as
-   libraries and made use of in per-identity independent services (one
-   service for each identity, containing all the augmenters used by
-   that identity) using a standard framework that will live in the
-   senters/senters repo, to ensure that instruments conform to a
-   standard specification of instrument events.  The actual instrument
-   code will be implemented as libraries that can be pulled in as
-   dependencies into particular instrument servers.
+   libraries and made use of as dependencies in per-identity
+   independent services (one service for each identity, serving all
+   the augmenters used by that identity) using a standard augmenter
+   framework that will live in the senters/senters repo, to ensure
+   that instruments conform to the standard specification.
 
    Transparent augmenters make use of the senters protocol core
    library which will include a compiler for INQL a query language for
