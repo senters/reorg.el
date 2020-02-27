@@ -46,11 +46,9 @@
    transaction log and produces an attention-ranked report on centers
    in need of attention.
 
-   At least in the present version, 
-
    Because of the value of being able to work with files in emacs,
    files will be the system of record, and directly processed by the
-   code.  This includes writing the report output 
+   code.  This includes writing the report output to a file.
 
 ** Usage
 
