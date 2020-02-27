@@ -158,7 +158,15 @@
 
    A *center* (of attention) is anything that attention can be given
    to-- in other words anything that an author can be involved in,
-   over some period of time however long or short in duration.
+   over some period of time however long or short in duration.  Some
+   informal categories describing kinds centers one might might want
+   to scaffold in WTD can include "problem solvers", "problem
+   avoiders", "opportunity optimizers", and "treasure collectors".
+   Higher order use of centers for scaffolding attention to
+   scaffolding itself, and tracking its utility is paradigmatically
+   what "narrative practice scaffolding" refers to, and developing
+   this approach to computing is one of the main goals of the Senters
+   project.
 
    A *loop* (a closely related idea for reference is Boyd's OODA loop)
    tracks the status of an author or attendant's involvement in a center
