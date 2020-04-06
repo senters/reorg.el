@@ -46,3 +46,8 @@
 (defun wtd-copy-transaction-link ()
   (interactive)
   (kill-new (wtd-transaction-to-link)))
+
+(defmacro wtd-def-act (instrument-act-fn instrument-act)
+  `(defun ,instrument-act-fn ()
+     (interactive)
+     (insert (concat "+ act " ,instrument-act " " (wtd-timestamp) ", "))))
