@@ -2,12 +2,25 @@
 
 (defvar project-dir "/home/rplevy/prj/wtd-personal/")
 
+(defvar time-format "%Y%m%d%H%M%S")
+
 (defun wtd-timestamp ()
-  (format-time-string "%Y%m%d%H%M%S"))
+  (format-time-string time-format))
+
+(defun wtd-timestamp-yesterday ()
+  (pcase-let ((`(,s_ ,m_ ,h_ ,d ,m ,y ,dow_ ,dst_ ,utc_)
+               (decode-time (time-subtract (current-time) (* 24 3600)))))
+    (format-time-string time-format
+                        (apply #'encode-time
+                               (list 0 0 0 d m y)))))
 
 (defun wtd-insert-timestamp ()
   (interactive)
-  (insert (concat (wtd-timestamp) ", ")))
+  (insert (concat (wtd-timestamp))))
+
+(defun wtd-insert-timestamp-yesterday ()
+  (interactive)
+  (insert (concat (wtd-timestamp-yesterday))))
 
 (defun wtd-identifier ()
   (concat "<<" (eshell-user-name) "-" (wtd-timestamp) ">>"))
@@ -47,7 +60,9 @@
   (interactive)
   (kill-new (wtd-transaction-to-link)))
 
-(defmacro wtd-def-act (instrument-act-fn instrument-act)
-  `(defun ,instrument-act-fn ()
+(defmacro wtd-def-step (instrument-step-fn instrument-step &optional comma timestamp)
+  `(defun ,instrument-step-fn ()
      (interactive)
-     (insert (concat "+ act " ,instrument-act " " (wtd-timestamp) ", "))))
+     (insert (concat "+ step " ,instrument-step " "
+                     (or ,timestamp (wtd-timestamp))
+                     (if ,comma ", " "")))))
