@@ -31,8 +31,14 @@
 
 (defun wtd-journal-transaction ()
   (interactive)
-  (beginning-of-line)
-  (insert (concat "** " (wtd-identifier))))
+  (other-window 1)
+  (switch-to-buffer "journal.org")
+  (beginning-of-buffer)
+  (next-line)
+  (insert (concat "** " (wtd-identifier) " \n\n"))
+  (previous-line)
+  (previous-line)
+  (end-of-line))
 
 (defun wtd-identifer-to-link (&optional identifier title)
   (interactive)
