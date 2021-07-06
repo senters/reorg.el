@@ -1,74 +1,319 @@
-;; functions for writing things down in org-mode
+(defvar project-dir "prj/wtd/")
 
-(defvar project-dir "/home/rplevy/prj/wtd-personal/")
+(defvar identity-dir "prj/wtd-personal/")
+
+(defvar server-dir "prj/senters/")
+
+(defun load-project-file (f)
+  (load-file (concat "$HOME/" project-dir f)))
+
+(load-project-file "dependencies.el")
+(load-project-file "utils.el")
 
 (defvar time-format "%Y%m%d%H%M%S")
 
 (defun wtd-timestamp ()
   (format-time-string time-format))
 
-(defun wtd-timestamp-yesterday ()
+(defun wtd-timestamp-for-day (&optional f)
   (pcase-let ((`(,s_ ,m_ ,h_ ,d ,m ,y ,dow_ ,dst_ ,utc_)
-               (decode-time (time-subtract (current-time) (* 24 3600)))))
+               (decode-time (funcall f (current-time)))))
     (format-time-string time-format
                         (apply #'encode-time
                                (list 0 0 0 d m y)))))
 
+(defun wtd-timestamp-yesterday ()
+  (wtd-timestamp-for-day
+   (lambda (time)
+     (time-subtract time (* 24 3600)))))
+
+(defun wtd-timestamp-today ()
+  (wtd-timestamp-for-day
+   (lambda (time) time)))
+
 (defun wtd-insert-timestamp ()
   (interactive)
-  (insert (concat (wtd-timestamp))))
+  (insert (wtd-timestamp)))
 
 (defun wtd-insert-timestamp-yesterday ()
   (interactive)
-  (insert (concat (wtd-timestamp-yesterday))))
+  (insert (wtd-timestamp-yesterday)))
 
-(defun wtd-identifier ()
-  (concat "<<" (eshell-user-name) "-" (wtd-timestamp) ">>"))
+(defun wtd-identifier (&optional timestamp)
+  (concat "<<" (eshell-user-name) "-" (or timestamp (wtd-timestamp)) ">>"))
 
 (defun wtd-insert-identifier ()
   (interactive)
   (insert (wtd-identifier)))
 
-(defun wtd-journal-transaction ()
-  (interactive)
-  (other-window 1)
-  (switch-to-buffer "journal.org")
-  (beginning-of-buffer)
-  (next-line)
-  (insert (concat "** " (wtd-identifier) " \n\n"))
-  (previous-line)
-  (previous-line)
-  (end-of-line))
+(defun remove-anchor-brackets (identifier)
+  (replace-regexp-in-string "\[<>\]" "" identifier))
 
-(defun wtd-identifer-to-link (&optional identifier title)
+(defun title->label (title)
+  (replace-regexp-in-string " " "-" (downcase title)))
+
+(defun in-journal? ()
+  (equal "journal.org" (buffer-name)))
+
+(defun wtd-identifier-to-link (&optional identifier title)
   (interactive)
   (concat "["
-          "[file:" (replace-regexp-in-string project-dir "" (buffer-file-name))
+          "[file:" (replace-regexp-in-string (concat "$HOME/" identity-dir)
+                                             "" (buffer-file-name))
           "::" (or identifier (buffer-substring (region-beginning) (region-end)))
           "]"
           (if title (concat "[" title "]") "")
           "]"))
 
-(defun wtd-copy-id-as-link ()
-  (interactive)
-  (kill-new (wtd-identifer-to-link)))
+(defun wtd-subtree-heading-to-title (subtree-text)
+  (replace-regexp-in-string "^\*+ <<.*>> \\\(.*\\\)" "\\1" subtree-text))
 
-(defun wtd-transaction-to-link ()
-  (interactive)
+(defun wtd-subtree-heading-to-identifier (subtree-text)
+  (replace-regexp-in-string "^\*+ <<\\\(.*\\\)>> .*" "\\1" subtree-text))
+
+(defun wtd-subtree ()
   (outline-mark-subtree)
-  (let* ((m          (buffer-substring (region-beginning) (region-end)))
-         (m1         (car (split-string m "\n")))
-         (identifier (replace-regexp-in-string "^\*+ <<\\\(.*\\\)>> .*" "\\1" m1))
-         (title      (replace-regexp-in-string "^\*+ <<.*>> \\\(.*\\\)" "\\1" m1)))
-    (wtd-identifer-to-link (org-trim identifier) (org-trim title))))
+  (let ((bss (buffer-substring (region-beginning) (region-end))))
+    (deactivate-mark)
+    bss))
+
+(defun wtd-subtree-heading ()
+  (car (split-string (wtd-subtree) "\n")))
+
+(defun wtd-transaction-title ()
+  (wtd-subtree-heading-to-title (wtd-subtree-heading)))
+
+(defun wtd-transaction-link ()
+  (let* ((heading    (wtd-subtree-heading))
+         (identifier (wtd-subtree-heading-to-identifier heading))
+         (title      (wtd-subtree-heading-to-title heading)))
+    (wtd-identifier-to-link (org-trim identifier) (org-trim title))))
 
 (defun wtd-copy-transaction-link ()
   (interactive)
-  (kill-new (wtd-transaction-to-link)))
+  (kill-new (wtd-transaction-link)))
 
-(defmacro wtd-def-step (instrument-step-fn instrument-step &optional comma timestamp)
-  `(defun ,instrument-step-fn ()
-     (interactive)
-     (insert (concat "+ step " ,instrument-step " "
-                     (or ,timestamp (wtd-timestamp))
-                     (if ,comma ", " "")))))
+(defun wtd-document-at-point ()
+  (interactive)
+  (message "This function will go to or create the document linked to"))
+
+(defun wtd-document (&optional identifier label title content)
+  (interactive)
+  (cd (concat "~/" identity-dir))
+  (let* ((identifier (or identifier (wtd-identifier)))
+         (title (or title (read-string "new document title: ")))
+         (label (or label (title->label title)))
+         (labeled-identifier (concat (remove-anchor-brackets identifier) "-"
+                                     label))
+         (document-buffer-name (concat labeled-identifier ".org"))
+         (path (concat "index/" document-buffer-name))
+         (link (concat "file:" path "::" identifier)))
+    (find-file path)
+    (insert (concat "** " identifier " " title "\n"))
+    (when content
+      (indent-relative)
+      (insert (concat content "\n")))
+    (end-of-buffer)
+    document-buffer-name))
+
+(defun wtd-clone (&optional doc doc-title)
+  (interactive)
+  (cd (concat "~/" identity-dir))
+  (let ((document (or doc
+                      (ido-completing-read "clone document: "
+                                           (directory-files
+                                            "index/" nil
+                                            directory-files-no-dot-files-regexp)))))
+    (find-file (concat "index/" document))
+    (wtd-document nil nil doc-title)
+    (insert-buffer document)
+    (kill-line)
+    (kill-line)))
+
+(defun wtd-revise ()
+  (interactive)
+  (when (in-journal?)
+    (let* ((subtree-string (wtd-subtree))
+           (ttitle (wtd-transaction-title))
+           (tlink (wtd-transaction-link)))
+      (wtd-document nil nil
+                    (concat "Revision of " ttitle)
+                    (concat "- Revision of " tlink "\n" subtree-string))
+      (goto-line 3)
+      (kill-line)
+      (kill-line))))
+
+(defun wtd-discard ()
+  (interactive)
+  (cd (concat "~/" identity-dir))
+  (let ((document (ido-completing-read "discard document: "
+                                       (directory-files
+                                        "index/" nil
+                                        directory-files-no-dot-files-regexp))))
+    (find-file (concat "index/" document))
+    (delete-file (buffer-file-name))
+    (kill-buffer)))
+
+(defun wtd-transact ()
+  (interactive)
+  (let ((buffer (buffer-name)))
+    (other-window 1)
+    (switch-to-buffer "journal.org")
+    (beginning-of-buffer)
+    (next-line)
+    (insert-buffer buffer)
+    (other-window 1)
+    (switch-to-buffer buffer)
+    (delete-file (buffer-file-name))
+    (kill-buffer buffer)
+    (when (not (eq (buffer-name) "journal.org"))
+      (switch-to-buffer "journal.org"))
+    (save-buffer)))
+
+(global-set-key (kbd "C-c C-t") 'wtd-transact)
+
+(defvar wtd-instruments nil)
+
+(defun wtd-update-instruments ()
+  (interactive)
+  (let ((r (request-response-data
+            (request "http://localhost:5514/0.1/instruments"
+              :sync t
+              :parser 'json-read))))
+    (setq wtd-instruments
+      (assoc-default 'instruments r))))
+
+(defun wtd-find-instrument (instr-name)
+  (first-match (lambda (instr-spec)
+                 (string-equal instr-name
+                               (assoc-default 'local-name instr-spec)))
+               wtd-instruments))
+
+(defun wtd-find-step (instr-spec step-name)
+  (first-match (lambda (step-spec)
+                 (string-equal step-name
+                               (assoc-default 'name step-spec)))
+               (assoc-default 'steps instr-spec)))
+
+(defun wtd-insert-step (step &optional arg-key-vals)
+  (let* ((instrument-and-step-names (split-string step "\\."))
+         (instr-name (car instrument-and-step-names))
+         (step-name (cadr instrument-and-step-names))
+         (instrument-spec (wtd-find-instrument instr-name))
+         (step-spec (wtd-find-step instrument-spec (cadr instrument-and-step-names)))
+         (spacer (current-col-space)))
+    (insert "+ step " instr-name "." step-name " " (wtd-timestamp))
+    (let* ((arg-keys (assoc-default 'args step-spec))
+           (args (or arg-key-vals
+                     (cl-mapcar 'cons arg-keys (make-list (length arg-keys) "")))))
+      (dovector (arg args)
+                (insert (concat "\n" spacer "  + " (car arg) " " (cdr arg)))))))
+
+;; (wtd-insert-step "water.log-hydration") ;; leave values to be filled in
+;; (wtd-insert-step "water.log-hydration" '(("amount" . "1")))
+
+(defun wtd-step ()
+  (interactive)
+  (let ((choices (apply
+                  #'append
+                  (mapcar
+                   (lambda (instrument)
+                     (let* ((instr (assoc-default 'local-name instrument))
+                            (steps (assoc-default 'steps instrument)))
+                       (mapcar
+                        (lambda (step)
+                          (concat instr "." (assoc-default 'name step)))
+                        steps)))
+                   wtd-instruments))))
+    (let ((choice (ido-completing-read "instrument.step:" choices)))
+      (wtd-insert-step choice))))
+
+(defun wtd-senters-call? (token)
+  ;; todo: support other calls
+  (string-equal token "step"))
+
+(defvar wtd-voice-doc-title "Voice Input Document")
+
+(defvar wtd-voice-doc-buffer-name nil)
+
+(defun wtd-voice-form-field-has-value? (field)
+  (and (not (string-equal "" (assoc-default field doc)))
+       (not (string-equal (symbol-name field)
+                          (assoc-default field doc)))))
+
+(defun wtd-voice-queue ()
+  (interactive)
+  (let ((documents
+         (assoc-default 'documents
+                        (request-response-data
+                         (request "http://localhost:5514/0.1/voice-queue"
+                           :sync t
+                           :parser 'json-read)))))
+    (when documents
+      (dovector (doc documents)
+                ;; experimenting with selecting available steps in a
+                ;; web form. will need to replace with being driven
+                ;; by instrument specs from journal though
+                (if (wtd-voice-form-field-has-value? 'water)
+                    (progn
+                      (if (and wtd-voice-doc-buffer-name
+                               (get-buffer wtd-voice-doc-buffer-name))
+                          (progn
+                            (switch-to-buffer wtd-voice-doc-buffer-name)
+                            (end-of-buffer))
+                        (setq wtd-voice-doc-buffer-name
+                              (wtd-document nil nil wtd-voice-doc-title)))
+                      (insert "   ")
+                      (wtd-insert-step
+                       "water.log-hydration"
+                       (list (cons "amount"
+                                   (assoc-default 'water doc))))
+                      (newline)
+                      (save-buffer))
+                  (progn
+                    (wtd-document nil nil
+                                  (assoc-default 'title doc)
+                                  (assoc-default 'document doc))
+                    (save-buffer)))))))
+
+(defvar wtd-voice-queue-timer nil)
+(defun reorg-start-polling-voice-queue ()
+  (generate-new-buffer "*reorg-voice-queue*")
+  (setq wtd-voice-queue-timer (run-with-timer 0 30 'wtd-voice-queue)))
+(defun reorg-stop-polling-voice-queue ()
+  (cancel-timer wtd-voice-queue-timer))
+
+(defun wtd-ctrl-c-ctrl-c ()
+  (interactive)
+  (let* ((current-line (org-current-line-string))
+         (parsed (cdddr (split-string current-line " " t))))
+    (if (wtd-senters-call? (car parsed))
+        (progn
+          (back-to-indentation)
+          (kill-line)
+          (wtd-insert-step (cadr parsed)))
+      nil)))
+
+(add-hook 'org-ctrl-c-ctrl-c-hook 'wtd-ctrl-c-ctrl-c)
+
+(defun reorg-start-server ()
+  (interactive)
+  (cd (concat "~/" server-dir))
+  (async-shell-command "lein ring server-headless 5514"
+                       "*reorg-server*" "*reorg-server errors*"))
+
+(defun reorg-stop-server ()
+  (interactive)
+  (kill-buffer "*reorg-server*"))
+
+(defun reorg-start ()
+  (interactive)
+  (reorg-start-server)
+  ;; TODO: wait until after "started server" is shown in output shell
+  (cd (concat "~/" identity-dir))
+  (reorg-update-instruments)
+  (reorg-start-polling-voice-queue))
+
+(defun reorg-stop ()
+  (reorg-stop-polling-voice-queue)
+  (reorg-stop-server))
