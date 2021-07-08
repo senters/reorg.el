@@ -97,15 +97,17 @@
   (interactive)
   (message "This function will go to or create the document linked to"))
 
+(defun wtd-document-buffer-name (identifier title &optional label)
+  (concat (remove-anchor-brackets identifier) "-"
+          (or label (title->label title)) ".org"))
+
 (defun wtd-document (&optional identifier label title content)
   (interactive)
   (cd (concat "~/" identity-dir))
   (let* ((identifier (or identifier (wtd-identifier)))
          (title (or title (read-string "new document title: ")))
-         (label (or label (title->label title)))
-         (labeled-identifier (concat (remove-anchor-brackets identifier) "-"
-                                     label))
-         (document-buffer-name (concat labeled-identifier ".org"))
+         (document-buffer-name (wtd-document-buffer-name
+                                identifier title label))
          (path (concat "index/" document-buffer-name))
          (link (concat "file:" path "::" identifier)))
     (find-file path)
@@ -143,13 +145,16 @@
       (kill-line)
       (kill-line))))
 
-(defun wtd-discard ()
+(defun wtd-discard (&optional doc-buffer-name)
   (interactive)
   (cd (concat "~/" identity-dir))
-  (let ((document (ido-completing-read "discard document: "
-                                       (directory-files
-                                        "index/" nil
-                                        directory-files-no-dot-files-regexp))))
+  (let ((document (or doc-buffer-name
+                      (ido-completing-read
+                       "discard document: "
+                       (cons (buffer-name)
+                             (directory-files
+                              "index/" nil
+                              directory-files-no-dot-files-regexp))))))
     (find-file (concat "index/" document))
     (delete-file (buffer-file-name))
     (kill-buffer)))
@@ -276,12 +281,27 @@
                                   (assoc-default 'document doc))
                     (save-buffer)))))))
 
-(defvar wtd-voice-queue-timer nil)
-(defun reorg-start-polling-voice-queue ()
-  (generate-new-buffer "*reorg-voice-queue*")
-  (setq wtd-voice-queue-timer (run-with-timer 0 30 'wtd-voice-queue)))
-(defun reorg-stop-polling-voice-queue ()
-  (cancel-timer wtd-voice-queue-timer))
+(defun reorg-sweep-voice-buffer ()
+  (interactive)
+  (let ((target-buffer (buffer-name)))
+    (switch-to-buffer wtd-voice-doc-buffer-name)
+    (goto-line 2)
+    (set-mark-command nil)
+    (end-of-buffer)
+    (kill-ring-save nil nil t)
+    (wtd-discard wtd-voice-doc-buffer-name)
+    (setq wtd-voice-doc-buffer-name nil)
+    (switch-to-buffer target-buffer)
+    (yank)))
+
+(defun reorg-every-15-minutes ()
+  (wtd-voice-queue)
+  (wtd-update-instruments))
+(defvar reorg-timer nil)
+(defun reorg-start-polling ()
+  (setq reorg-timer (run-with-timer 0 15 'reorg-every-15-minutes)))
+(defun reorg-stop-polling ()
+  (cancel-timer reorg-timer))
 
 (defun wtd-ctrl-c-ctrl-c ()
   (interactive)
@@ -309,11 +329,9 @@
 (defun reorg-start ()
   (interactive)
   (reorg-start-server)
-  ;; TODO: wait until after "started server" is shown in output shell
   (cd (concat "~/" identity-dir))
-  (reorg-update-instruments)
-  (reorg-start-polling-voice-queue))
+  (reorg-start-polling))
 
 (defun reorg-stop ()
-  (reorg-stop-polling-voice-queue)
+  (reorg-stop-polling)
   (reorg-stop-server))
