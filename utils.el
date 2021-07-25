@@ -16,3 +16,9 @@
 (defmacro dovector (arg-list &rest forms)
   `(dolist (,(car arg-list) (vector->list ,(cadr arg-list)))
      ,@forms))
+
+(defun prn-scratch (data)
+  (print data (get-buffer "*scratch*")))
+
+(defun mapcaar-dotpair-list (fn l)
+  (mapcar (lambda (pair) (cons (funcall fn (car pair)) (cdr pair))) l))

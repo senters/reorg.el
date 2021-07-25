@@ -216,6 +216,7 @@
 
 ;; (wtd-insert-step "water.log-hydration") ;; leave values to be filled in
 ;; (wtd-insert-step "water.log-hydration" '(("amount" . "1")))
+;; (wtd-insert-step "water.log-hydration" '((amount . "1")))
 
 (defun wtd-step ()
   (interactive)
@@ -254,12 +255,17 @@
                          (request "http://localhost:5514/0.1/voice-queue"
                            :sync t
                            :parser 'json-read)))))
+    ;; (when documents (prn-scratch documents))
     (when documents
       (dovector (doc documents)
-                ;; experimenting with selecting available steps in a
-                ;; web form. will need to replace with being driven
-                ;; by instrument specs from journal though
-                (if (wtd-voice-form-field-has-value? 'water)
+                (let* ((instr-step (symbol-name (caar doc)))
+                       (step-args (cdr doc)))
+                  (if (string-equal instr-step "document")
+                      (progn
+                        (wtd-document nil nil
+                                      (assoc-default 'title doc)
+                                      (assoc-default 'document doc))
+                        (save-buffer))
                     (progn
                       (if (and wtd-voice-doc-buffer-name
                                (get-buffer wtd-voice-doc-buffer-name))
@@ -269,17 +275,11 @@
                         (setq wtd-voice-doc-buffer-name
                               (wtd-document nil nil wtd-voice-doc-title)))
                       (insert "   ")
-                      (wtd-insert-step
-                       "water.log-hydration"
-                       (list (cons "amount"
-                                   (assoc-default 'water doc))))
+                      (wtd-insert-step instr-step
+                                       (mapcaar-dotpair-list 'symbol-name
+                                                             step-args))
                       (newline)
-                      (save-buffer))
-                  (progn
-                    (wtd-document nil nil
-                                  (assoc-default 'title doc)
-                                  (assoc-default 'document doc))
-                    (save-buffer)))))))
+                      (save-buffer))))))))
 
 (defun reorg-sweep-voice-buffer ()
   (interactive)
@@ -294,14 +294,15 @@
     (switch-to-buffer target-buffer)
     (yank)))
 
-(defun reorg-every-15-minutes ()
+(defun reorg-every-15-seconds ()
   (wtd-voice-queue)
   (wtd-update-instruments))
 (defvar reorg-timer nil)
 (defun reorg-start-polling ()
-  (setq reorg-timer (run-with-timer 0 15 'reorg-every-15-minutes)))
+  (setq reorg-timer (run-with-timer 0 15 'reorg-every-15-seconds)))
 (defun reorg-stop-polling ()
-  (cancel-timer reorg-timer))
+  (when reorg-timer
+    (cancel-timer reorg-timer)))
 
 (defun wtd-ctrl-c-ctrl-c ()
   (interactive)
@@ -333,5 +334,6 @@
   (reorg-start-polling))
 
 (defun reorg-stop ()
+  (interactive)
   (reorg-stop-polling)
   (reorg-stop-server))
