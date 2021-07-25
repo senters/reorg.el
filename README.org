@@ -22,18 +22,17 @@
    (only instruments are so far supported, and only steps actually
    work, not yet signs, because I need to implement inql).
 
+     - [X] rename project to reorg
+     - [X] separate reorg server and senters library
+       - move server into reorg.el repo
+       - code for supporting an emacs-based PASS goes into reorg-server
      - [ ] update reorg-server to expect one step and one sign per
        instrument
-     - [X] rename project to reorg
      - [ ] change reorg.el functions to seek the instrument by name
        and use its one step
      - [ ] recreate personal instrument calls to test with
-     - [ ] update reorg-step to use new instrument results
-     - [ ] separate reorg server and senters library
-       - code for supporting an emacs-based PASS goes into reorg-server
-       - code for core senters protocol logic goes into senters library
-     - [ ] in org syntax for instruments define the engine as the
-       first segment that in a sense namespaces the instrument
+     - [ ] new syntax for instruments define the engine as the first
+       segment that in a sense namespaces the instrument
        - new syntax
          #+BEGIN_SRC
          # + instrument inql.$INSTR
@@ -46,6 +45,7 @@
          way in which makes sense to pass params to engine in
          instrument definition, which it seems there could be plent of
          reason to do
+       - [ ] update reorg-step to use new instrument syntax
        - [ ] define, generate, and parse instruments as $ENGINE.INSTR
      - [ ] update reorg README
      - [ ] update senters spec doc

@@ -317,7 +317,7 @@
 
 (defun reorg-start-server ()
   (interactive)
-  (cd "~/prj/senters") ; this is going to be changed in server refactor
+  (cd (concat "~/" project-dir))
   (async-shell-command "lein ring server-headless 5514"
                        "*reorg-server*" "*reorg-server errors*"))
 
