@@ -1,4 +1,43 @@
-* WTD
+* Reorg.el
+
+  [ NOTE: this README is very much out of date and will be revamped
+  soon. also the code is in flux at moment as I'm trying to make a big
+  push to get a lot done on it this weekend and the next few evenings
+  most likely.  It is not usable by others at present because I
+  haven't shared the server code. The most immediate things I'm
+  working on are listed below, which will get it at least to that
+  state.  The next step after that is to complete the implementation
+  of expressing centers, and dirt-minimal non-AI attendent algorithm,
+  (only instruments are so far supported, and only steps actually
+  work, not yet signs, because I need to implement inql).
+
+     - [ ] update reorg-server to expect one step and one sign per
+       instrument
+     - [ ] rename wtd project to reorg
+     - [ ] change reorg.el functions to seek the instrument by name
+       and use its one step
+     - [ ] recreate personal instrument calls to test with
+     - [ ] update reorg-step to use new instrument results
+     - [ ] separate reorg server and senters library
+       - code for supporting an emacs-based PASS goes into reorg-server
+       - code for core senters protocol logic goes into senters library
+     - [ ] in org syntax for instruments define the engine as the
+       first segment that in a sense namespaces the instrument
+       - new syntax
+         #+BEGIN_SRC
+         # + instrument inql.$INSTR
+         #   - sign $QUERY
+         #   - step $ARGS
+         #+END_SRC
+       - [ ] remove expectation of "sign name" and "step name", which
+         are longer things that exist
+       - [ ] continue to support optional engine key in case there's a
+         way in which makes sense to pass params to engine in
+         instrument definition, which it seems there could be plent of
+         reason to do
+       - [ ] define, generate, and parse instruments as $ENGINE.INSTR
+       - [ ] update reorg README and senters spec documents
+  ]
 
   WTD or "Writing Things Down" is a journal-based personal
   organization system.  Unlike other systems such as Paul Allen's GTD
