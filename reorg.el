@@ -1,8 +1,6 @@
-(defvar project-dir "prj/wtd/")
+(defvar project-dir (getenv "REORG_HOME"))
 
-(defvar identity-dir "prj/wtd-personal/")
-
-(defvar server-dir "prj/senters/")
+(defvar identity-dir (getenv "REORG_IDENTITY"))
 
 (defun load-project-file (f)
   (load-file (concat "$HOME/" project-dir f)))
@@ -12,39 +10,39 @@
 
 (defvar time-format "%Y%m%d%H%M%S")
 
-(defun wtd-timestamp ()
+(defun reorg-timestamp ()
   (format-time-string time-format))
 
-(defun wtd-timestamp-for-day (&optional f)
+(defun reorg-timestamp-for-day (&optional f)
   (pcase-let ((`(,s_ ,m_ ,h_ ,d ,m ,y ,dow_ ,dst_ ,utc_)
                (decode-time (funcall f (current-time)))))
     (format-time-string time-format
                         (apply #'encode-time
                                (list 0 0 0 d m y)))))
 
-(defun wtd-timestamp-yesterday ()
-  (wtd-timestamp-for-day
+(defun reorg-timestamp-yesterday ()
+  (reorg-timestamp-for-day
    (lambda (time)
      (time-subtract time (* 24 3600)))))
 
-(defun wtd-timestamp-today ()
-  (wtd-timestamp-for-day
+(defun reorg-timestamp-today ()
+  (reorg-timestamp-for-day
    (lambda (time) time)))
 
-(defun wtd-insert-timestamp ()
+(defun reorg-insert-timestamp ()
   (interactive)
-  (insert (wtd-timestamp)))
+  (insert (reorg-timestamp)))
 
-(defun wtd-insert-timestamp-yesterday ()
+(defun reorg-insert-timestamp-yesterday ()
   (interactive)
-  (insert (wtd-timestamp-yesterday)))
+  (insert (reorg-timestamp-yesterday)))
 
-(defun wtd-identifier (&optional timestamp)
-  (concat "<<" (eshell-user-name) "-" (or timestamp (wtd-timestamp)) ">>"))
+(defun reorg-identifier (&optional timestamp)
+  (concat "<<" (eshell-user-name) "-" (or timestamp (reorg-timestamp)) ">>"))
 
-(defun wtd-insert-identifier ()
+(defun reorg-insert-identifier ()
   (interactive)
-  (insert (wtd-identifier)))
+  (insert (reorg-identifier)))
 
 (defun remove-anchor-brackets (identifier)
   (replace-regexp-in-string "\[<>\]" "" identifier))
@@ -55,7 +53,7 @@
 (defun in-journal? ()
   (equal "journal.org" (buffer-name)))
 
-(defun wtd-identifier-to-link (&optional identifier title)
+(defun reorg-identifier-to-link (&optional identifier title)
   (interactive)
   (concat "["
           "[file:" (replace-regexp-in-string (concat "$HOME/" identity-dir)
@@ -65,48 +63,48 @@
           (if title (concat "[" title "]") "")
           "]"))
 
-(defun wtd-subtree-heading-to-title (subtree-text)
+(defun reorg-subtree-heading-to-title (subtree-text)
   (replace-regexp-in-string "^\*+ <<.*>> \\\(.*\\\)" "\\1" subtree-text))
 
-(defun wtd-subtree-heading-to-identifier (subtree-text)
+(defun reorg-subtree-heading-to-identifier (subtree-text)
   (replace-regexp-in-string "^\*+ <<\\\(.*\\\)>> .*" "\\1" subtree-text))
 
-(defun wtd-subtree ()
+(defun reorg-subtree ()
   (outline-mark-subtree)
   (let ((bss (buffer-substring (region-beginning) (region-end))))
     (deactivate-mark)
     bss))
 
-(defun wtd-subtree-heading ()
-  (car (split-string (wtd-subtree) "\n")))
+(defun reorg-subtree-heading ()
+  (car (split-string (reorg-subtree) "\n")))
 
-(defun wtd-transaction-title ()
-  (wtd-subtree-heading-to-title (wtd-subtree-heading)))
+(defun reorg-transaction-title ()
+  (reorg-subtree-heading-to-title (reorg-subtree-heading)))
 
-(defun wtd-transaction-link ()
-  (let* ((heading    (wtd-subtree-heading))
-         (identifier (wtd-subtree-heading-to-identifier heading))
-         (title      (wtd-subtree-heading-to-title heading)))
-    (wtd-identifier-to-link (org-trim identifier) (org-trim title))))
+(defun reorg-transaction-link ()
+  (let* ((heading    (reorg-subtree-heading))
+         (identifier (reorg-subtree-heading-to-identifier heading))
+         (title      (reorg-subtree-heading-to-title heading)))
+    (reorg-identifier-to-link (org-trim identifier) (org-trim title))))
 
-(defun wtd-copy-transaction-link ()
+(defun reorg-copy-transaction-link ()
   (interactive)
-  (kill-new (wtd-transaction-link)))
+  (kill-new (reorg-transaction-link)))
 
-(defun wtd-document-at-point ()
+(defun reorg-document-at-point ()
   (interactive)
   (message "This function will go to or create the document linked to"))
 
-(defun wtd-document-buffer-name (identifier title &optional label)
+(defun reorg-document-buffer-name (identifier title &optional label)
   (concat (remove-anchor-brackets identifier) "-"
           (or label (title->label title)) ".org"))
 
-(defun wtd-document (&optional identifier label title content)
+(defun reorg-document (&optional identifier label title content)
   (interactive)
   (cd (concat "~/" identity-dir))
-  (let* ((identifier (or identifier (wtd-identifier)))
+  (let* ((identifier (or identifier (reorg-identifier)))
          (title (or title (read-string "new document title: ")))
-         (document-buffer-name (wtd-document-buffer-name
+         (document-buffer-name (reorg-document-buffer-name
                                 identifier title label))
          (path (concat "index/" document-buffer-name))
          (link (concat "file:" path "::" identifier)))
@@ -118,7 +116,7 @@
     (end-of-buffer)
     document-buffer-name))
 
-(defun wtd-clone (&optional doc doc-title)
+(defun reorg-clone (&optional doc doc-title)
   (interactive)
   (cd (concat "~/" identity-dir))
   (let ((document (or doc
@@ -127,25 +125,25 @@
                                             "index/" nil
                                             directory-files-no-dot-files-regexp)))))
     (find-file (concat "index/" document))
-    (wtd-document nil nil doc-title)
+    (reorg-document nil nil doc-title)
     (insert-buffer document)
     (kill-line)
     (kill-line)))
 
-(defun wtd-revise ()
+(defun reorg-revise ()
   (interactive)
   (when (in-journal?)
-    (let* ((subtree-string (wtd-subtree))
-           (ttitle (wtd-transaction-title))
-           (tlink (wtd-transaction-link)))
-      (wtd-document nil nil
+    (let* ((subtree-string (reorg-subtree))
+           (ttitle (reorg-transaction-title))
+           (tlink (reorg-transaction-link)))
+      (reorg-document nil nil
                     (concat "Revision of " ttitle)
                     (concat "- Revision of " tlink "\n" subtree-string))
       (goto-line 3)
       (kill-line)
       (kill-line))))
 
-(defun wtd-discard (&optional doc-buffer-name)
+(defun reorg-discard (&optional doc-buffer-name)
   (interactive)
   (cd (concat "~/" identity-dir))
   (let ((document (or doc-buffer-name
@@ -159,7 +157,7 @@
     (delete-file (buffer-file-name))
     (kill-buffer)))
 
-(defun wtd-transact ()
+(defun reorg-transact ()
   (interactive)
   (let ((buffer (buffer-name)))
     (other-window 1)
@@ -175,50 +173,50 @@
       (switch-to-buffer "journal.org"))
     (save-buffer)))
 
-(global-set-key (kbd "C-c C-t") 'wtd-transact)
+(global-set-key (kbd "C-c C-t") 'reorg-transact)
 
-(defvar wtd-instruments nil)
+(defvar reorg-instruments nil)
 
-(defun wtd-update-instruments ()
+(defun reorg-update-instruments ()
   (interactive)
   (let ((r (request-response-data
             (request "http://localhost:5514/0.1/instruments"
               :sync t
               :parser 'json-read))))
-    (setq wtd-instruments
+    (setq reorg-instruments
       (assoc-default 'instruments r))))
 
-(defun wtd-find-instrument (instr-name)
+(defun reorg-find-instrument (instr-name)
   (first-match (lambda (instr-spec)
                  (string-equal instr-name
                                (assoc-default 'local-name instr-spec)))
-               wtd-instruments))
+               reorg-instruments))
 
-(defun wtd-find-step (instr-spec step-name)
+(defun reorg-find-step (instr-spec step-name)
   (first-match (lambda (step-spec)
                  (string-equal step-name
                                (assoc-default 'name step-spec)))
                (assoc-default 'steps instr-spec)))
 
-(defun wtd-insert-step (step &optional arg-key-vals)
+(defun reorg-insert-step (step &optional arg-key-vals)
   (let* ((instrument-and-step-names (split-string step "\\."))
          (instr-name (car instrument-and-step-names))
          (step-name (cadr instrument-and-step-names))
-         (instrument-spec (wtd-find-instrument instr-name))
-         (step-spec (wtd-find-step instrument-spec (cadr instrument-and-step-names)))
+         (instrument-spec (reorg-find-instrument instr-name))
+         (step-spec (reorg-find-step instrument-spec (cadr instrument-and-step-names)))
          (spacer (current-col-space)))
-    (insert "+ step " instr-name "." step-name " " (wtd-timestamp))
+    (insert "+ step " instr-name "." step-name " " (reorg-timestamp))
     (let* ((arg-keys (assoc-default 'args step-spec))
            (args (or arg-key-vals
                      (cl-mapcar 'cons arg-keys (make-list (length arg-keys) "")))))
       (dovector (arg args)
                 (insert (concat "\n" spacer "  + " (car arg) " " (cdr arg)))))))
 
-;; (wtd-insert-step "water.log-hydration") ;; leave values to be filled in
-;; (wtd-insert-step "water.log-hydration" '(("amount" . "1")))
-;; (wtd-insert-step "water.log-hydration" '((amount . "1")))
+;; (reorg-insert-step "water.log-hydration") ;; leave values to be filled in
+;; (reorg-insert-step "water.log-hydration" '(("amount" . "1")))
+;; (reorg-insert-step "water.log-hydration" '((amount . "1")))
 
-(defun wtd-step ()
+(defun reorg-step ()
   (interactive)
   (let ((choices (apply
                   #'append
@@ -230,24 +228,24 @@
                         (lambda (step)
                           (concat instr "." (assoc-default 'name step)))
                         steps)))
-                   wtd-instruments))))
+                   reorg-instruments))))
     (let ((choice (ido-completing-read "instrument.step:" choices)))
-      (wtd-insert-step choice))))
+      (reorg-insert-step choice))))
 
-(defun wtd-senters-call? (token)
+(defun reorg-senters-call? (token)
   ;; todo: support other calls
   (string-equal token "step"))
 
-(defvar wtd-voice-doc-title "Voice Input Document")
+(defvar reorg-voice-doc-title "Voice Input Document")
 
-(defvar wtd-voice-doc-buffer-name nil)
+(defvar reorg-voice-doc-buffer-name nil)
 
-(defun wtd-voice-form-field-has-value? (field)
+(defun reorg-voice-form-field-has-value? (field)
   (and (not (string-equal "" (assoc-default field doc)))
        (not (string-equal (symbol-name field)
                           (assoc-default field doc)))))
 
-(defun wtd-voice-queue ()
+(defun reorg-voice-queue ()
   (interactive)
   (let ((documents
          (assoc-default 'documents
@@ -262,20 +260,20 @@
                        (step-args (cdr doc)))
                   (if (string-equal instr-step "document")
                       (progn
-                        (wtd-document nil nil
+                        (reorg-document nil nil
                                       (assoc-default 'title doc)
                                       (assoc-default 'document doc))
                         (save-buffer))
                     (progn
-                      (if (and wtd-voice-doc-buffer-name
-                               (get-buffer wtd-voice-doc-buffer-name))
+                      (if (and reorg-voice-doc-buffer-name
+                               (get-buffer reorg-voice-doc-buffer-name))
                           (progn
-                            (switch-to-buffer wtd-voice-doc-buffer-name)
+                            (switch-to-buffer reorg-voice-doc-buffer-name)
                             (end-of-buffer))
-                        (setq wtd-voice-doc-buffer-name
-                              (wtd-document nil nil wtd-voice-doc-title)))
+                        (setq reorg-voice-doc-buffer-name
+                              (reorg-document nil nil reorg-voice-doc-title)))
                       (insert "   ")
-                      (wtd-insert-step instr-step
+                      (reorg-insert-step instr-step
                                        (mapcaar-dotpair-list 'symbol-name
                                                              step-args))
                       (newline)
@@ -284,19 +282,19 @@
 (defun reorg-sweep-voice-buffer ()
   (interactive)
   (let ((target-buffer (buffer-name)))
-    (switch-to-buffer wtd-voice-doc-buffer-name)
+    (switch-to-buffer reorg-voice-doc-buffer-name)
     (goto-line 2)
     (set-mark-command nil)
     (end-of-buffer)
     (kill-ring-save nil nil t)
-    (wtd-discard wtd-voice-doc-buffer-name)
-    (setq wtd-voice-doc-buffer-name nil)
+    (reorg-discard reorg-voice-doc-buffer-name)
+    (setq reorg-voice-doc-buffer-name nil)
     (switch-to-buffer target-buffer)
     (yank)))
 
 (defun reorg-every-15-seconds ()
-  (wtd-voice-queue)
-  (wtd-update-instruments))
+  (reorg-voice-queue)
+  (reorg-update-instruments))
 (defvar reorg-timer nil)
 (defun reorg-start-polling ()
   (setq reorg-timer (run-with-timer 0 15 'reorg-every-15-seconds)))
@@ -304,22 +302,22 @@
   (when reorg-timer
     (cancel-timer reorg-timer)))
 
-(defun wtd-ctrl-c-ctrl-c ()
+(defun reorg-ctrl-c-ctrl-c ()
   (interactive)
   (let* ((current-line (org-current-line-string))
          (parsed (cdddr (split-string current-line " " t))))
-    (if (wtd-senters-call? (car parsed))
+    (if (reorg-senters-call? (car parsed))
         (progn
           (back-to-indentation)
           (kill-line)
-          (wtd-insert-step (cadr parsed)))
+          (reorg-insert-step (cadr parsed)))
       nil)))
 
-(add-hook 'org-ctrl-c-ctrl-c-hook 'wtd-ctrl-c-ctrl-c)
+(add-hook 'org-ctrl-c-ctrl-c-hook 'reorg-ctrl-c-ctrl-c)
 
 (defun reorg-start-server ()
   (interactive)
-  (cd (concat "~/" server-dir))
+  (cd "~/prj/senters") ; this is going to be changed in server refactor
   (async-shell-command "lein ring server-headless 5514"
                        "*reorg-server*" "*reorg-server errors*"))
 

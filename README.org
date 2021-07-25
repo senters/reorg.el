@@ -1,19 +1,30 @@
 * Reorg.el
 
-  [ NOTE: this README is very much out of date and will be revamped
-  soon. also the code is in flux at moment as I'm trying to make a big
-  push to get a lot done on it this weekend and the next few evenings
-  most likely.  It is not usable by others at present because I
-  haven't shared the server code. The most immediate things I'm
-  working on are listed below, which will get it at least to that
-  state.  The next step after that is to complete the implementation
-  of expressing centers, and dirt-minimal non-AI attendent algorithm,
-  (only instruments are so far supported, and only steps actually
-  work, not yet signs, because I need to implement inql).
+  Reorg.el is a journal-based "personal attention reorganization
+  system" (PARS) built ontop of emacs org-mode and the senters
+  framework.  Unlike personal organization systems such as Paul
+  Allen's GTD and Ryder Carroll's bullet journaling, its goal is not
+  merely to stay ontop of an endless incoming list of tasks, but to
+  achieve greater agency over personal attentional resources.
+  Further, while it is mainly a solitary system at present, it is
+  designed to boost cooperative intelligence.
+
+** Development Roadmap
+
+   This README is very much out of date and I am in the process of
+   revamping it. The code is in flux at moment as I'm trying to make a
+   big push to get a lot done on it this weekend and the next few
+   evenings most likely.  It is not usable by others at present
+   because I haven't shared the server code. The most immediate things
+   I'm working on are listed below, which will get it at least to that
+   state.  The next step after that is to complete the implementation
+   of expressing centers, and dirt-minimal non-AI attendent algorithm,
+   (only instruments are so far supported, and only steps actually
+   work, not yet signs, because I need to implement inql).
 
      - [ ] update reorg-server to expect one step and one sign per
        instrument
-     - [ ] rename wtd project to reorg
+     - [X] rename project to reorg
      - [ ] change reorg.el functions to seek the instrument by name
        and use its one step
      - [ ] recreate personal instrument calls to test with
@@ -36,16 +47,8 @@
          instrument definition, which it seems there could be plent of
          reason to do
        - [ ] define, generate, and parse instruments as $ENGINE.INSTR
-       - [ ] update reorg README and senters spec documents
-  ]
-
-  WTD or "Writing Things Down" is a journal-based personal
-  organization system.  Unlike other systems such as Paul Allen's GTD
-  and Ryder Carroll's bullet journaling, its goal is not merely to
-  stay ontop of an endless incoming list of tasks, but to achieve
-  greater agency over personal attentional resources.  Further, while
-  it is mainly a solitary system at present, it is designed to boost
-  cooperative intelligence.
+     - [ ] update reorg README
+     - [ ] update senters spec doc
 
 ** Philosophy
 
@@ -66,22 +69,23 @@
    All graphical practices have their own charactistic merits as tools
    of thought, and at root this is because ecologically situated
    embodied human cognition is externally scaffolded by the use of
-   tools that enable us to coordinate attention socially.  WTD is
+   tools that enable us to coordinate attention socially.  Reorg.el is
    designed within the framework of the Senters project, which seeks
    to develop a graphical practice at the basic intersection of
    machine-learnable behaviors and human joint attentional scaffolding
    to make computing, and human cooperative communication in general,
    more expressively powerful.  Further details can be found at
-   https://github.com/senters/senters.
+   http://senters.info.
 
-   The longer term roadmap of WTD is to implement it as a personal
-   attention scaffolding system (PASS) as defined in the document
-   linked above, though presently it is practicable as a manual
-   process.
+   It has been my own experience that it can't be overstated how much
+   tangible satisfactiom and life-saving benefit comes from having a
+   graphical practice of reorganization, that is to say any sort of
+   system by which one's own life is effectively and reliably
+   controlled by semiotic acts within the system.
 
 ** Core Principles
 
-   The following are core principles of both WTD and the Senters
+   The following are core principles of both Reorg.el and the Senters
    project broadly:
 
      * Self-authorship
@@ -102,219 +106,209 @@
        use of scaffolding, to wield cognitive capacities that would
        not be possible without these tools.
 
-** WTD's Use of Senters
+** Reorg and Senters
 
-   A full description of Senters can be found at
-   https://github.com/senters/senters/blob/master/senters-technical-spec.org.
-
-   One caveat to be made about Senters as a broader project versus its
-   use in the WTD system, is that Senters is designed to become a
-   system integrated into immersive interaction in a fine-grained way.
-   Presently it is not yet developed to that extent.  In WTD, Senters
-   is generally likely to be more coarse-grained in its application at
-   its present stage.  Eventually it should start to approach its
-   aspirations of being a seamless bicycle for the mind or "ecology of
-   bike paths for embodied minds".
+   One caveat to be made about Senters as a broader project versus the
+   current state of the Reorg as a PARS, is that Senters is designed
+   to become a system integrated into immersive interaction in a
+   fine-grained way.  Presently it is not yet developed to that
+   extent.  In Reorg, Senters is generally likely to be more
+   coarse-grained in its application at its present stage.  Eventually
+   it should start to approach its aspirations of being a seamless
+   bicycle for the mind or "ecology of bike paths for embodied minds".
 
    Another caveat to make is that Senters is designed with joint
    attention and intelligence augmentation through building on a
    broader pool of socially shared scaffolding.  At its present stage
-   WTD is much more solitary.  However as Senters becomes more
+   Reorg is much more solitary.  However as Senters becomes more
    well-developed, if successful it can benefit from a larger pool of
    authors interfacing through the gestures that they intentionally
    share with one anouther.
 
 ** Setup & Getting Started
 
-   The system should ideally be available to use at all times.  It
-   will be assumed that a digital system is used (the example
-   presently assumes emacs & org-mode).  These instructions can also
-   be read substituting digital files for paper pages.  References to
-   scripted or automatic processes can be substituted with manual
-   equivalents.  However, later evolutions of WTD are likely to move
-   farther away from compatibility with a fully manual and paper-based
-   approach.
+   This section is currently in the process of being rewritten
 
-   1. Create a journal file that collects append-only timestamped
-      transactions.  There should be only one journal file. In
-      Senters, transactions can have a recipient or default to one's
-      own identity.  In WTD, for the time being, transactions will
-      likey be with oneself, but nothing stops anyone from trying out
-      the system socially, for example in a group working on a
-      project, even today.  Suggested practices for social use can be
-      elaborated here as more data becomes available from experience.
+#    The system should ideally be available to use at all times.  It
+#    will be assumed that a digital system is used (the example
+#    presently assumes emacs & org-mode).  These instructions can also
+#    be read substituting digital files for paper pages.  References to
+#    scripted or automatic processes can be substituted with manual
+#    equivalents.  However, later evolutions of Reorg are likely to move
+#    farther away from compatibility with a fully manual and paper-based
+#    approach.
 
-      See "Anatomy of a Transaction" below for more details on the
-      operation that can be performed in a transaction.
+#    1. Create a journal file that collects append-only timestamped
+#       transactions.  There should be only one journal file. In
+#       Senters, transactions can have a recipient or default to one's
+#       own identity.  In Reorg, for the time being, transactions will
+#       likey be with oneself, but nothing stops anyone from trying out
+#       the system socially, for example in a group working on a
+#       project, even today.  Suggested practices for social use can be
+#       elaborated here as more data becomes available from experience.
 
-   2. Create an instrument file.  This can be a manual instrument or a
-      scripted one.  Instruments interact with external systems, so
-      they might for example read from a file that is collecting
-      logged data.  See the section on instruments below for more
-      details on instruments. In the example in this repository, the
-      weight-loss instrument includes a food log and a weight log.
+#       See "Anatomy of a Transaction" below for more details on the
+#       operation that can be performed in a transaction.
 
-   3. Create an instrument log for the events produced by instruments
-      automatically.  Instruments as invoked by authors directly
-      should be logged in the journal.  This reduces noise in the
-      journal and maintains a clean separation of concerns between
-      authorial events (scaffolding) and mechanical events
-      (instrumenting).
+#    2. Create an instrument file.  This can be a manual instrument or a
+#       scripted one.  Instruments interact with external systems, so
+#       they might for example read from a file that is collecting
+#       logged data.  See the section on instruments below for more
+#       details on instruments. In the example in this repository, the
+#       weight-loss instrument includes a food log and a weight log.
 
-   4. Create an index file that collects references to transactions in
-      the journal.  There can be multiple index files, for example an
-      index file for routines, an index file for how-tos, and an index
-      file for projects. Indexes are labeled and ranked with the most
-      pertinent at the top.  An index entry can simply label a
-      reference to transactions in the journal, or tell a story
-      connecting journal references.  Some kinds of indexes might be
-      automaticaly generable based on transactions in the journal, but
-      others are necessarily expressions of authorial intent
-      eg. selecting which of many past attentional processes are the
-      ones meant as presently relevant.
+#    3. Create an instrument log for the events produced by instruments
+#       automatically.  Instruments as invoked by authors directly
+#       should be logged in the journal.  This reduces noise in the
+#       journal and maintains a clean separation of concerns between
+#       authorial events (scaffolding) and mechanical events
+#       (instrumenting).
 
-   5. In the instrument log add events of instruments (or have them
-      automatically added).  In the journal declare centers and add
-      gestures to centers.  Use the index to prioritize, sequence, and
-      make plans or to-do lists with links to transactions in the
-      journal.  While it has not been duly proven out as of the time
-      of this writing, it seems that organizing in this way should not
-      only be a good fit for the nature of attention, but should
-      provide a machine-followable structure of attention that can
-      underpin attendants that make appropriate intention-aware
-      discoveries and recommendations.
+#    4. Create an index file that collects references to transactions in
+#       the journal.  There can be multiple index files, for example an
+#       index file for routines, an index file for how-tos, and an index
+#       file for projects. Indexes are labeled and ranked with the most
+#       pertinent at the top.  An index entry can simply label a
+#       reference to transactions in the journal, or tell a story
+#       connecting journal references.  Some kinds of indexes might be
+#       automaticaly generable based on transactions in the journal, but
+#       others are necessarily expressions of authorial intent
+#       eg. selecting which of many past attentional processes are the
+#       ones meant as presently relevant.
 
-** Authors, Centers, and Loops
+#    5. In the instrument log add events of instruments (or have them
+#       automatically added).  In the journal declare centers and add
+#       gestures to centers.  Use the index to prioritize, sequence, and
+#       make plans or to-do lists with links to transactions in the
+#       journal.  While it has not been duly proven out as of the time
+#       of this writing, it seems that organizing in this way should not
+#       only be a good fit for the nature of attention, but should
+#       provide a machine-followable structure of attention that can
+#       underpin attendants that make appropriate intention-aware
+#       discoveries and recommendations.
 
-   People who use this system are refered to as *authors*.  In WTD,
-   and in Senters broadly, it is recommended to create many authorial
-   identities or "alts" as they are sometimes called.  For example I
-   have at least one personal WTD identity, and one WTD identity for
-   each professional engagement I've had since starting some early
-   version of this system.  The example setup in this repository is
-   for a single identity.  Multiple identites are just two such setups
-   side by side.
+# ** Authors, Centers, and Loops
 
-   A *center* (of attention) is anything that attention can be given
-   to-- in other words anything that an author can be involved in,
-   over some period of time however long or short in duration.  Some
-   informal categories describing kinds centers one might might want
-   to scaffold in WTD can include "problem solvers", "problem
-   avoiders", "opportunity optimizers", and "treasure collectors".
-   Higher order use of centers for scaffolding attention to
-   scaffolding itself, and tracking its utility is paradigmatically
-   what "narrative practice scaffolding" refers to, and developing
-   this approach to computing is one of the main goals of the Senters
-   project.
+#    People who use this system are refered to as *authors*.  In Reorg,
+#    and in Senters broadly, it is recommended to create many authorial
+#    identities or "alts" as they are sometimes called.  For example I
+#    have at least one personal Reorg identity, and one Reorg identity for
+#    each professional engagement I've had since starting some early
+#    version of this system.  The example setup in this repository is
+#    for a single identity.  Multiple identites are just two such setups
+#    side by side.
 
-   A *loop* (a closely related idea for reference is Boyd's OODA loop)
-   tracks the status of an author or attendant's involvement in a center
-   of attention.  There are three phases of active involvement tracked
-   by a loop:
+#    A *center* (of attention) is anything that attention can be given
+#    to-- in other words anything that an author can be involved in,
+#    over some period of time however long or short in duration.  Some
+#    informal categories describing kinds centers one might might want
+#    to scaffold in Reorg can include "problem solvers", "problem
+#    avoiders", "opportunity optimizers", and "treasure collectors".
+#    Higher order use of centers for scaffolding attention to
+#    scaffolding itself, and tracking its utility is paradigmatically
+#    what "narrative practice scaffolding" refers to, and developing
+#    this approach to computing is one of the main goals of the Senters
+#    project.
 
-   1. potential to engage
-   2. active involvement
-   2. evaluation of further involvement
+#    A *loop* (a closely related idea for reference is Boyd's OODA loop)
+#    tracks the status of an author or attendant's involvement in a center
+#    of attention.  There are three phases of active involvement tracked
+#    by a loop:
 
-** Anatomy of a Transaction
+#    1. potential to engage
+#    2. active involvement
+#    2. evaluation of further involvement
 
-   Transactions are collections of one or more operations.
-   Transactions should be viewed as atomic, because they can be
-   referred to only as a whole and not as parts. If the operations
-   could conceivably need to be referred to individually they should
-   be separate transactions.  The term "transaction" is loosely
-   inspired by Dewey & Bentley's use of the term in "Knowing and the
-   Known" as well as its use in computer science.  The following are
-   type of operations that transactions can include:
+# ** Anatomy of a Transaction
 
-   * note: can be anything, a random vague idea, a nonsensical phrase,
-     etc. A transaction with no gestures, just comments, is by default
-     a note.
+#    Transactions are collections of one or more operations.
+#    Transactions should be viewed as atomic, because they can be
+#    referred to only as a whole and not as parts. If the operations
+#    could conceivably need to be referred to individually they should
+#    be separate transactions.  The term "transaction" is loosely
+#    inspired by Dewey & Bentley's use of the term in "Knowing and the
+#    Known" as well as its use in computer science.  The following are
+#    type of operations that transactions can include:
 
-   * alias: give a new name for reference, to an existing transaction
-     in the journal.
+#    * note: can be anything, a random vague idea, a nonsensical phrase,
+#      etc. A transaction with no gestures, just comments, is by default
+#      a note.
 
-   * instrument-event: an instrument triggering by action of the
-     author, whether as automated or continuous stream-based check, or
-     manually.
+#    * alias: give a new name for reference, to an existing transaction
+#      in the journal.
 
-   * center: a center as indicated by this operation is not much more
-     than a note, except that it indicates an intention to gesture in
-     reference to it.
+#    * instrument-event: an instrument triggering by action of the
+#      author, whether as automated or continuous stream-based check, or
+#      manually.
 
-   * replace: indicate that a new version of a center is intended to
-     substitute for the previous collected experience of a center, for
-     example as a cleaner redo based on what was learned over time.
+#    * center: a center as indicated by this operation is not much more
+#      than a note, except that it indicates an intention to gesture in
+#      reference to it.
 
-   * any gesture, of one of the following kinds:
+#    * replace: indicate that a new version of a center is intended to
+#      substitute for the previous collected experience of a center, for
+#      example as a cleaner redo based on what was learned over time.
 
-*** Gestures
+#    * any gesture, of one of the following kinds:
 
-    * engage: instrument an event or gesture as motivating entry
-      - refrain: same but opposite
+# *** Gestures
 
-    * support: instrument an event or gesture as motivating inclusion
-      because it supports the present center's focus
-      - hinder: same but opposite
+#     * engage: instrument an event or gesture as motivating entry
+#       - refrain: same but opposite
 
-    * realize: instrument an event or gesture as motivating exit
-      - continue: same but opposite
+#     * support: instrument an event or gesture as motivating inclusion
+#       because it supports the present center's focus
+#       - hinder: same but opposite
 
-*** Gesture-auxiliary
+#     * realize: instrument an event or gesture as motivating exit
+#       - continue: same but opposite
 
-    * forget: forget a previously suggested gesture, either of one's
-      own or someone else's.  This does not remove history but
-      recognizes it as being forgotten in terms of interest or
-      utilitity at the time it is transacted. Sometimes helpfully in
-      transaction with an alternative gesture.
+# *** Gesture-auxiliary
 
-    * accept: accept a gesture given by another author or by an
-      attendant.  It serves to document credit for bring it to
-      attention.  In transaction it can relate a gesture as
-      elaborating another gesture.
+#     * forget: forget a previously suggested gesture, either of one's
+#       own or someone else's.  This does not remove history but
+#       recognizes it as being forgotten in terms of interest or
+#       utilitity at the time it is transacted. Sometimes helpfully in
+#       transaction with an alternative gesture.
 
-** Instruments
+#     * accept: accept a gesture given by another author or by an
+#       attendant.  It serves to document credit for bring it to
+#       attention.  In transaction it can relate a gesture as
+#       elaborating another gesture.
 
-   Instruments signal a bit of information as a go/no-go outcome, in
-   other words a threshold function on some aspect of the world that
-   they "instrument". Instruments can have arguments at the time of
-   definition, but these arguments are baked in for all invocation
-   thereafter making them singly invokable tools with single positive
-   outcomes.
+# ** Instruments
 
-** Best Practices
+#    Instruments signal a bit of information as a go/no-go outcome, in
+#    other words a threshold function on some aspect of the world that
+#    they "instrument". Instruments can have arguments at the time of
+#    definition, but these arguments are baked in for all invocation
+#    thereafter making them singly invokable tools with single positive
+#    outcomes.
 
-   * Indexes succinctly tie together transactions in the journal. More
-     verbose notes can go in the transactions themselves.
+# ** Best Practices
 
-   * Where to put things:
+#    * Indexes succinctly tie together transactions in the journal. More
+#      verbose notes can go in the transactions themselves.
 
-     1. External system events are wherever they live, or in log files
-        asscociated with instruments in their directories.
+#    * Where to put things:
 
-     2. Rules for turning external events into instrumented events
-        live in instruments.
+#      1. External system events are wherever they live, or in log files
+#         asscociated with instruments in their directories.
 
-     3. Events produced by instruments go in the instrument log.
+#      2. Rules for turning external events into instrumented events
+#         live in instruments.
 
-     4. Transactions including notes, gestures, and other operations
-        go in the journal.
+#      3. Events produced by instruments go in the instrument log.
 
-     5. Narratives, lists, etc weaving together journal activity go in
-        index files.
+#      4. Transactions including notes, gestures, and other operations
+#         go in the journal.
+
+#      5. Narratives, lists, etc weaving together journal activity go in
+#         index files.
 
 ** FAQ
 
-   + Why do all this work to organize one's activity?
-
-     - to prototype use of Senters protocol (which is itself a work in
-       progress)
-
-     - to motivate automation of manual tasks by feeling the burden of
-       doing things manually.  This work has started in
-       https://github.com/senters/wtd/tree/master/server of this repo.
-
-   + Is WTD ready for use by someone encountering the current
+   + Is Reorg ready for use by someone encountering the current
      docuementation and supporting tools?
 
      To be honest, probably not yet, as it's flux and I'm still
@@ -322,16 +316,3 @@
      It will become increasingly accessible as the level of "cognitive
      automation" increases with more of the methodology being baked
      into the supporting framework.
-
-** Development Roadmap
-
-   1. the first phase of development is the manual use of the system
-      in emacs
-
-   2. the next phase of development is the integration of emacs code
-      supporting these practices, with the main backend server and
-      instances of instrument servers for particular.
-
-   3. a phase of development beyond that is to implement the system as
-      an app that qualifies as a real immersive Senters PASS (personal
-      attentional scaffolding system).
