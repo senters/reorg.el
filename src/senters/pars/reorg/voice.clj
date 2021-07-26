@@ -22,11 +22,12 @@
    [:html
     [:form {:method "post" :action "/0.1/voice-post" :id "voice-form"}
      [:input {:type "submit" :value "create new" :style "font-size: 100px;"}]
-     [:input {:type "text" :name "title" :id "title" :value "title"
+     [:input {:type "hidden" :name "create-new-doc" :id "create-new-doc"
+              :value "create-new-doc"}]
+     [:input {:type "text" :name "doc-title" :id "doc-title" :value "doc-title"
               :style "font-size: 100px;" :onfocus "this.value=''"}]
-     [:input {:type "text" :name "document" :id "document"
-              :value "document" :style "font-size: 100px;"
-              :onfocus "this.value=''"}]]
+     [:input {:type "text" :name "doc-body" :id "doc-body" :value "doc-body"
+              :style "font-size: 100px;" :onfocus "this.value=''"}]]
     (for [instr (si/get-instruments)
           :let [step (first (:steps instr))]] ; this is about to change
       [:div {:style "display: block;"}

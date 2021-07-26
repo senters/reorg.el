@@ -258,11 +258,11 @@
       (dovector (doc documents)
                 (let* ((instr-step (symbol-name (caar doc)))
                        (step-args (cdr doc)))
-                  (if (string-equal instr-step "document")
+                  (if (string-equal instr-step "create-new-doc")
                       (progn
                         (reorg-document nil nil
-                                      (assoc-default 'title doc)
-                                      (assoc-default 'document doc))
+                                        (assoc-default 'doc-title doc)
+                                        (assoc-default 'doc-body doc))
                         (save-buffer))
                     (progn
                       (if (and reorg-voice-doc-buffer-name
