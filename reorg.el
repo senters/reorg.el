@@ -169,8 +169,7 @@
     (switch-to-buffer buffer)
     (delete-file (buffer-file-name))
     (kill-buffer buffer)
-    (when (not (eq (buffer-name) "journal.org"))
-      (switch-to-buffer "journal.org"))
+    (other-window 1)
     (save-buffer)))
 
 (global-set-key (kbd "C-c C-t") 'reorg-transact)
